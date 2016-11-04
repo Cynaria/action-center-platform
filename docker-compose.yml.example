@@ -48,7 +48,6 @@ services:
       db_password: mysecretpassword
       db_port: '5432'
       db_host: db
-      DB_AUTO_MIGRATE: 'false' # or 'true', depending on if you want to run migrations every time the container starts
 
       # Test database configuration
       test_db_password: mysecrettestpassword
@@ -57,7 +56,6 @@ services:
       test_db_adapter: postgresql
       test_db_port: '5432'
       test_db_host: testdb
-      TEST_DB_AUTO_MIGRATE: 'false'
 
       # Social media (required)
       twitter_handle: 'example'
@@ -117,6 +115,27 @@ services:
       #
       # End of application environment variables
       #
+
+  app_db_migrate:
+    build: .
+    depends_on: ["db"]
+    restart: never
+    command: bundle exec rake db:migrate
+    volumes: ["./db:/opt/actioncenter/db"]
+    environment:
+      <<: *env
+      ROLE: worker
+
+  app_testdb_migrate:
+    build: .
+    depends_on: ["testdb"]
+    restart: never
+    command: bundle exec rake db:migrate
+    volumes: ["./db:/opt/actioncenter/db"]
+    environment:
+      <<: *env
+      RAILS_ENV: test
+      ROLE: worker
 
   # Uncomment these services to run cron/delayed job
   #

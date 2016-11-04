@@ -3,14 +3,6 @@ set -e
 
 rm -rf tmp/
 
-if [ "$DB_AUTO_MIGRATE" == "true" ]; then
-  bin/rake db:migrate
-fi
-
-if [ "$TEST_DB_AUTO_MIGRATE" == "true" ]; then
-  bin/rake db:migrate RAILS_ENV=test
-fi
-
 # Download and precompile assets
 if [ "$ROLE" == "web" -o "$ROLE" == "test" ]; then
     bin/rake webshims:update_public
