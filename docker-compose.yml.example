@@ -120,7 +120,7 @@ services:
     build: .
     depends_on: ["db"]
     restart: never
-    command: bundle exec rake db:migrate
+    command: sh -c '(bundle exec rake db:version || bundle exec rake db:setup) && bundle exec rake db:migrate'
     volumes: ["./db:/opt/actioncenter/db"]
     environment:
       <<: *env
@@ -130,7 +130,7 @@ services:
     build: .
     depends_on: ["testdb"]
     restart: never
-    command: bundle exec rake db:migrate
+    command: sh -c '(bundle exec rake db:version || bundle exec rake db:setup) && bundle exec rake db:migrate'
     volumes: ["./db:/opt/actioncenter/db"]
     environment:
       <<: *env
